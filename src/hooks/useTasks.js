@@ -13,7 +13,27 @@ export default function useTask() {
       .catch((err) => console.error("Errore fetch task", err));
   }, []);
 
-  function addTask() {}
+  async function addTask(newTask) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setTasks((prevTasks) => [...prevTasks, data.task]);
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.error("Errore durante l'aggiunta del task:", error);
+    }
+  }
 
   function removeTask() {}
 

@@ -1,5 +1,8 @@
 import { useState, useRef, useContext } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 export default function AddTask() {
+  const { addTask } = useContext(GlobalContext);
+
   const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
   const [title, setTitle] = useState("");
@@ -7,7 +10,7 @@ export default function AddTask() {
   const statusRef = useRef();
   const [errore, setErrore] = useState(null);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!title.trim()) {
@@ -30,20 +33,23 @@ export default function AddTask() {
 
     console.log("Nuovo task:", task);
 
-    setTitle("");
-    descriptionRef.current.value = "";
-    statusRef.current.value = "toDo";
+    try {
+      await addTask(task);
+      alert("Task aggiunto con successo!");
+
+      // Reset form
+      setTitle("");
+      descriptionRef.current.value = "";
+      statusRef.current.value = "To do";
+    } catch (error) {
+      alert("Errore: " + error.message);
+    }
   }
 
   return (
     <>
       <h2> Aggiungi nuovo task</h2>
       <form onSubmit={handleSubmit}>
-        {/* Il campo non può essere vuoto.
-Non può contenere simboli speciali.
-Se il valore è errato, mostrare un messaggio di errore.
-Utilizzare una costante con i caratteri vietati:
-const symbols = "!@#$%^&*()-_=+[]{}|;:'\\",.<>?/~"; */}
         <input
           type="text"
           value={title}
@@ -52,8 +58,8 @@ const symbols = "!@#$%^&*()-_=+[]{}|;:'\\",.<>?/~"; */}
         />
         <textarea name="description" id="" ref={descriptionRef}></textarea>
         <select name="status" id="" ref={statusRef}>
-          <option value="toDo">To do</option>
-          <option value="doing">Doing</option>
+          <option value="To do">To do</option>
+          <option value="Doion">Doing</option>
           <option value="Done">Done</option>
         </select>
         <button type="submit">Aggiungi Task</button>
