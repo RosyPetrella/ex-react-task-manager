@@ -35,7 +35,7 @@ export default function TaskDetail() {
   }
 
   return (
-    <div>
+    <div className="mt-3 ms-3">
       <h2>Dettaglio Task</h2>
       <p>
         <strong>Nome:</strong> {task.title}
@@ -50,8 +50,15 @@ export default function TaskDetail() {
         <strong>Data creazione:</strong> {task.createdAt}
       </p>
 
-      <button onClick={handleDelete}>Elimina Task</button>
-      <button onClick={() => setShowEditModal(true)}>Modifica Task</button>
+      <button className="btn btn-danger me-2" onClick={handleDelete}>
+        Elimina Task
+      </button>
+      <button
+        className="btn btn-warning"
+        onClick={() => setShowEditModal(true)}
+      >
+        Modifica Task
+      </button>
 
       <EditTaskModal
         show={showEditModal}

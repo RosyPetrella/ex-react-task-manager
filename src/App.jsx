@@ -9,9 +9,13 @@ function App() {
     <>
       <GlobalProvider>
         <BrowserRouter>
-          <nav>
-            <NavLink to="/">Lista Task</NavLink>
-            <NavLink to="/add">Aggiungi Task</NavLink>
+          <nav className="bg-info pt-3 pb-3">
+            <NavLink className="ps-2 pe-2" to="/">
+              Lista Task
+            </NavLink>
+            <NavLink className="ps-2 pe-2" to="/add">
+              Aggiungi Task
+            </NavLink>
           </nav>
 
           <Routes>

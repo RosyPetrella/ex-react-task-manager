@@ -37,7 +37,11 @@ export default function EditTaskModal({ show, onClose, task, onSave }) {
       title="Modifica Task"
       confirmText="Salva"
       content={
-        <form ref={editFormRef} onSubmit={handleSubmit}>
+        <form
+          className="mt-3 ms-3 ps-3"
+          ref={editFormRef}
+          onSubmit={handleSubmit}
+        >
           <input
             type="text"
             value={title}

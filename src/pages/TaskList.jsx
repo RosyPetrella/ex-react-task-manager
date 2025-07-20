@@ -1,12 +1,13 @@
 import TaskRow from "../components/TaskRow";
 import { GlobalContext } from "../context/GlobalContext";
-import { useContext, useState, useMemo } from "react";
+import { useContext, useState, useMemo, useCallback } from "react";
 import React from "react";
 export default function TaskList() {
   const { tasks } = useContext(GlobalContext);
 
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   function handleSort(column) {
     if (sortBy === column) {
@@ -20,15 +21,17 @@ export default function TaskList() {
   }
 
   const sortedTasks = useMemo(() => {
-    const tasksCopy = [...tasks];
-
     const statusOrder = {
       "To do": 0,
       Doing: 1,
       Done: 2,
     };
 
-    tasksCopy.sort((a, b) => {
+    const filtered = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchQuery)
+    );
+
+    const sorted = [...filtered].sort((a, b) => {
       let compare = 0;
 
       if (sortBy === "title") {
@@ -40,15 +43,33 @@ export default function TaskList() {
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       }
 
-      return compare * sortOrder; // applichiamo l’ordine crescente/decrescente
+      return compare * sortOrder;
     });
 
-    return tasksCopy;
-  }, [tasks, sortBy, sortOrder]);
+    return sorted;
+  }, [tasks, sortBy, sortOrder, searchQuery]);
+
+  const handleSearchChange = useCallback(() => {
+    let timer;
+    return (e) => {
+      const value = e.target.value;
+
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setSearchQuery(value.toLowerCase());
+      }, 300);
+    };
+  }, [])();
 
   return (
     <>
       <div>
+        <input
+          className="mt-3 mb-2 ms-3"
+          type="text"
+          placeholder="Cerca per nome..."
+          onChange={handleSearchChange}
+        />
         <table>
           <thead>
             <tr>
