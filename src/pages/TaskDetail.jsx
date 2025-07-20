@@ -2,14 +2,16 @@ import { useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalContext";
 import Modal from "../components/Modal";
+import EditTaskModal from "../components/EditTaskModal";
 
 export default function TaskDetail() {
   const { id } = useParams(); // prendo l'id dalla rotta
-  const { tasks, removeTask } = useContext(GlobalContext);
+  const { tasks, removeTask, updateTask } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const task = tasks.find((t) => t.id === Number(id));
+  const [showEditModal, setShowEditModal] = useState(false);
 
   if (!task) return <p>Task non trovato</p>;
 
@@ -18,6 +20,15 @@ export default function TaskDetail() {
       await removeTask(task.id);
       alert("Task eliminato con successo!");
       navigate("/"); // Reindirizza alla lista dei task
+    } catch (error) {
+      alert("Errore: " + error.message);
+    }
+  }
+  async function handleSave(updatedTask) {
+    try {
+      await updateTask(updatedTask);
+      alert("Task aggiornato con successo!");
+      setShowEditModal(false);
     } catch (error) {
       alert("Errore: " + error.message);
     }
@@ -39,15 +50,14 @@ export default function TaskDetail() {
         <strong>Data creazione:</strong> {task.createdAt}
       </p>
 
-      <button onClick={() => setShowModal(true)}>Elimina Task</button>
+      <button onClick={handleDelete}>Elimina Task</button>
+      <button onClick={() => setShowEditModal(true)}>Modifica Task</button>
 
-      <Modal
-        show={showModal}
-        title="Conferma Eliminazione"
-        content={<p>Sei sicuro di voler eliminare questa task?</p>}
-        onClose={() => setShowModal(false)}
-        onConfirm={handleDelete}
-        confirmText="Elimina"
+      <EditTaskModal
+        show={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        task={task}
+        onSave={handleSave}
       />
     </div>
   );

@@ -7,6 +7,7 @@ export default function Modal({
   onClose,
   onConfirm,
   confirmText = "Conferma",
+  children,
 }) {
   if (!show) return null;
 
@@ -14,7 +15,7 @@ export default function Modal({
     <div>
       <div>
         <h2>{title}</h2>
-        <div>{content}</div>
+        <div>{children}</div>
         <div>
           <button onClick={onClose}>Annulla</button>
           <button onClick={onConfirm}>{confirmText}</button>
