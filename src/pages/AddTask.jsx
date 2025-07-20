@@ -59,7 +59,7 @@ export default function AddTask() {
         <textarea name="description" id="" ref={descriptionRef}></textarea>
         <select name="status" id="" ref={statusRef}>
           <option value="To do">To do</option>
-          <option value="Doion">Doing</option>
+          <option value="Doing">Doing</option>
           <option value="Done">Done</option>
         </select>
         <button type="submit">Aggiungi Task</button>
